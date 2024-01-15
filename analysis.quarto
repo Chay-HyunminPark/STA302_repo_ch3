@@ -1,0 +1,29 @@
+---
+title: "Toronto Dataset Analysis"
+output:
+  quarto::quarto_html:
+    self_contained: false
+---
+
+```{r setup, include=FALSE}
+# Load required libraries
+library(opendatatoronto)
+library(dplyr)
+library(ggplot2)
+
+# Download the dataset from Open Data Toronto
+dataset_url <- "https://open.toronto.ca/dataset/neighbourhood-crime-rates/" 
+dataset <- opendatatoronto::download_dataset(dataset_url)
+
+# Perform data cleaning steps (replace with your actual cleaning code)
+cleaned_dataset <- dataset %>% 
+  filter(!is.na(variable))  # Example: Remove rows with missing values in a specific variable
+
+# Perform data analysis and create a graph
+ggplot(cleaned_dataset, aes(x = variable, y = value)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Analysis of Toronto Dataset",
+       x = "Variable",
+       y = "Value") +
+  theme_minimal()
+```
