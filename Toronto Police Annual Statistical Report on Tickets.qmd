@@ -1,0 +1,65 @@
+# STA302_repo_ch3
+---
+title: "Police Annual Statistical Report - Tickets Issued Analysis"
+author: "Chay Park"
+format: html
+---
+
+```{r}
+#### Preamble ####
+# Purpose: Analyzing Police Annual Statistical Report - Tickets issued
+# Author: Chay Park
+# Email: chay.park@mail.utoronto.ca
+# Date: Jan 15, 2024
+# Prerequisites: ~
+```
+
+```{r}
+#### Workspace set-up ####
+# install.packages("tidyverse") 
+# install.packages("janitor")
+
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(jsonlite)
+```
+
+```{r}
+# Download the Police Annual Statistical Report - Tickets Issued dataset from OpenDataToronto
+# dataset_url <- "https://ckan0.cf.opendata.inter.prod-toronto.ca/download_resource/4e7ddbe4-8be6-495b-a05f-1743f39b7a4e?format=csv"
+tickets_dataset <- fromJSON("Tickets Issued.json")
+
+```
+
+```{r}
+head(tickets_dataset)
+```
+
+```{r}
+# Data Cleaning
+cleaned_tickets_dataset <- tickets_dataset %>%
+  select(OFFENCE_YEAR, AGE_GROUP, TICKET_COUNT) %>%  # Select relevant columns
+  filter(!is.na(OFFENCE_YEAR) & !is.na(AGE_GROUP) & !is.na(TICKET_COUNT))  # Remove rows with missing values
+```
+
+```{r}
+head(cleaned_tickets_dataset)
+```
+
+
+```{r}
+# Check unique values in the AGE_GROUP variable
+unique(cleaned_tickets_dataset$AGE_GROUP)
+
+# Create a bar graph to show ticket counts by year and age group
+ggplot(cleaned_tickets_dataset, aes(x = OFFENCE_YEAR, y = TICKET_COUNT, fill = AGE_GROUP)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Ticket Counts by Offence Year and Age Group",
+       x = "Offence Year",
+       y = "Ticket Count",
+       fill = "Age Group") +
+  scale_fill_manual(values = c("YOUTH" = "yellow", "ADULT" = "green", "UNKNOWN" = "red"))
+
+```
+
